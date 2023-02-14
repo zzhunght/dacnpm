@@ -1,25 +1,59 @@
-import logo from './logo.svg';
+/* eslint-disable react-hooks/exhaustive-deps */
 import './App.css';
+import './style/global.css';
+import Login from './page/login/Login';
+import SignUp from './page/login/Signup';
+
+import {Route, Switch, useHistory} from 'react-router-dom'
+import Sidebar from './components/Sidebar/Sidebar';
+import { useContext, useLayoutEffect} from 'react';
+import { AuthContext } from './context/AuthContext';
+import Product from './page/home/Product/Product';
+import Calendar from './page/home/Calendar/Calendar';
+
 
 function App() {
+  const {isAuthenticated} = useContext(AuthContext)
+
+  let history = useHistory();
+  useLayoutEffect(() => {
+    if (!isAuthenticated){
+      history.push('/login');
+    }
+    else {
+      history.push('/home');
+    }
+  }, [isAuthenticated])
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    
+    <>
+      {isAuthenticated ? (
+        <div className='flex'>
+          <Sidebar />  
+          <div className='content'>
+            <Switch>
+              <Route exact path='/product'>
+                <Product />
+              </Route>
+              <Route exact path='/calendar'>
+                <Calendar />
+              </Route>
+            </Switch>
+          </div>
+        </div>
+      ) : (
+        <>
+          <Route exact path='/login'>
+            <Login/>
+          </Route>
+          <Route exact path='/signup'>
+            <SignUp/>
+          </Route>
+        </>
+      )}
+    </>
+  )
 }
 
 export default App;

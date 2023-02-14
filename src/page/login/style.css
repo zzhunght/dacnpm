@@ -1,0 +1,78 @@
+.bg {
+    position: absolute;
+    background:#000;
+    background-repeat: no-repeat;
+    background-size: cover;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.auth-wr {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    margin: auto;
+    position: relative;
+}
+input.form-input {
+    display: flex;
+    height: 40px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    text-indent: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+.form-left {
+    display: flex;
+    align-items: center;
+    width: 320px;
+    background-image: url('../../assets/image/bg-small.jpg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.form-right {
+    width: 320px;
+    padding-left: 20px;
+}
+input.form-input {
+    display: flex;
+    height: 40px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    text-indent: 10px;
+    margin-bottom: 20px;
+    outline: none;
+}
+p.welcome {
+    text-align: center;
+    color: var(--purple);
+    font-weight: 600;
+    font-size: 18px;
+}
+p.form-title {
+    text-align: center;
+    font-size: 26px;
+    text-transform: uppercase;
+}
+button.form-submit {
+    padding: 12px 50px;
+    border-radius: 20px;
+    border: none;
+    background: #000;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button.form-submit:hover {
+    opacity: 0.8;
+}
+.auth-choose {
+    font-weight: 500;
+    color: var(--purple);
+    cursor: pointer;
+}
