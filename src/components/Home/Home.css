@@ -1,0 +1,45 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.home-header {
+    display: flex;
+    padding-left: 12px;
+    margin-top: 12px;
+    flex: 1;
+}
+
+.search-home {
+    width: 500px;
+}
+
+.account {
+    /* flex: 1;
+    padding-left: 508px; */
+    color: #fff;
+    font-size: 20px;
+    position: relative;
+}
+
+.product>.container>.row {
+   
+    background-color: #445489;
+}
+
+.accessory-item {
+    padding: 10px;
+}
+
+.card-home {
+    cursor: pointer;
+    background: #41a1a4;
+    height: 100px;
+    color: #fff;
+}
+
+.card-home:hover {
+    color: #000;
+}
+
