@@ -1,154 +1,147 @@
-import {
-  faCircleXmark,
-  faFloppyDisk,
-  faMagnifyingGlass,
-  faPenToSquare,
-  faSpinner,
-  faTrashCan,
-  faEye,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
-import { Form, Spinner } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../../context/AuthContext";
+import axiosInstance from "../../../utils/axiosConfig";
+import Add from "../../Button/Add";
+import Delete from "../../Button/Delete";
+import AddStaffModal from "../../Modal/AddStaffModal";
+import EditStaffModal from "../../Modal/EditStaffModal";
+import SearchBar from "../../search/SearchBar";
+import Table from "../../Table/Table";
 import "./Staff.css";
-const rawData = [
+
+
+const columns = [
   {
-    id: 1,
-    firstName: "A",
-    lastName: "Nguyen",
-    phone: "01234567",
-    address: "97 man thiện, hiệp phú",
-    date: "12/12/12",
-    male: "nữ",
-    email: "12@gmail.com",
+    Header: "ID",
+    accessor: "MANV"
   },
   {
-    id: 2,
-    firstName: "A",
-    lastName: "Nguyen",
-    phone: "01234567",
-    address: "97 man thiện, hiệp phú",
-    date: "12/12/12",
-    male: "nữ",
-    email: "12@gmail.com",
+    Header: "Tên",
+    accessor: "TEN",
   },
   {
-    id: 3,
-    firstName: "A",
-    lastName: "Nguyen",
-    phone: "01234567",
-    address: "97 man thiện, hiệp phú",
-    date: "12/12/12",
-    male: "nữ",
-    email: "12@gmail.com",
+    Header: "Họ",
+    accessor: "HO",
   },
   {
-    id: 4,
-    firstName: "B",
-    lastName: "Nguyen Nguyen",
-    phone: "01234567",
-    address: "97 man thiện, hiệp phú",
-    date: "12/12/12",
-    male: "nữ",
-    email: "12@gmail.com",
+    Header: "Dịa Chỉ",
+    accessor: "DIACHI",
   },
   {
-    id: 5,
-    firstName: "A",
-    lastName: "Nguyen",
-    phone: "01234567",
-    address: "97 man thiện, hiệp phú",
-    date: "12/12/12",
-    male: "nữ",
-    email: "12@gmail.com",
+    Header: "Ngày sinh",
+    accessor: "NGAYSINH",
+  },
+  {
+    Header: "Giới tính",
+    accessor: "PHAI",
+  },
+  {
+    Header: "Số điện thoại",
+    accessor: "SDT",
+  },
+  {
+    Header: "Email",
+    accessor: "EMAIL",
   },
 ];
+
 function Staff() {
-  const [tableData, setTableData] = useState(rawData);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [updateSate, setUpdateState] = useState(-1);
+  const [selected,setSelected] = useState([])
+  const [showAddModal,setShowAddModal] = useState(false)
+  const [showEditModal,setShowEditModal] = useState(false)
+  const [editData, setEditData] = useState({})
+  const [data, setData] = useState([])
+  const {messageApi} = useContext(AuthContext)
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 500);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
+    const getdata = async() =>{
+      const res = await axiosInstance.get('/staff')
+      const data = res.data
+      if(data.success) {
+        setData(data.items)
+      }
+    }
+    getdata()
+  },[])
+
+
+  const handleSelectedAll = (e) => {
+    if(e.target.checked) {
+      setSelected(data?.map(i => i.MALKDV))
+    } else {
+      setSelected([])
+    }
+
+  }
+
+  const handleSelected = (e, id) => {
+    if (e.target.checked ) {
+      setSelected(x => [...x, id])
+    } else {
+      const newSelelected = selected.filter(i => i !== id)
+      setSelected(newSelelected)
+    }
+  }
+
+  const handleEditClick = (data) => {
+    console.log(data) 
+    setEditData(data)
+    setShowEditModal(true)
+  }
+
+  const onDelete = async () => {
+
+    const res = await axiosInstance.delete('/staff/delete-staff?Ids=' + selected.join(','))
+    if(res.data.success) {
+      messageApi.open({
+        type: 'success',
+        content: 'Thao tác thành công !',
+      });
+      const newData = data?.filter(i => !selected.includes(i.MANV))
+      setData(newData)
+      setSelected([])
+    }
+  }
   return (
+    <>
     <div>
       <div className="search-header">
-        <div className="header-receipt-container">
-          <h4 className="header-receipt-name">DANH SÁCH NHÂN VIÊN</h4>
-          <Link className="add-receipt" to="/addCarReceipt">Thêm nhân viên</Link>
-        </div>
-
-        <input
-          type="text"
-          className="search"
-          placeholder="Tìm kiếm nhân viên"
-          onChange={(e) => setSearch(e.target.value)}
-        />
-
-        <div>
-          <Form >
-            <table>
-              <thead>
-                <tr>
-                  <th>Họ</th>
-                  <th>Tên</th>
-                  <th>SĐT</th>
-                  <th>Địa chỉ</th>
-                  <th>Ngày</th>
-                  <th>Giới tính</th>
-                  <th>Email</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {!loading &&
-                  tableData
-                    .filter((row) =>
-                      row.firstName.toLowerCase().includes(search)
-                      || row.lastName.toLowerCase().includes(search)
-                    )
-                    .map((row, index) =>
-                      (
-                        <tr key={row.id}>
-                          <td>{row.firstName}</td>
-                          <td>{row.lastName}</td>
-                          <td>{row.phone}</td>
-                          <td>{row.address}</td>
-                          <td>{row.date}</td>
-                          <td>{row.male}</td>
-                          <td>{row.email}</td>
-                          
-                          <td className="btn-replace">
-                            
-                            <button 
-                              className="edit-btn"
-                              
-                              
-                            >
-                              <FontAwesomeIcon icon={faPenToSquare} />
-                            </button>
-
-                            
-                            <button className="delete-btn" >
-                              <FontAwesomeIcon icon={faTrashCan} />
-                            </button>
-                          </td>
-                        </tr>
-                      )
-                    )}
-              </tbody>
-            </table>
-          </Form>
+      <div className="header-receipt-container">
+          <h4 className="title-medium">Nhân viên</h4>
+          <div className="flex mb-16 al-ct spc-bw">
+            <SearchBar/>
+            <div className="flex">
+              <Add onClick={()=>setShowAddModal(true)}/>
+              <Delete disabled={selected.length === 0 ? true : false} onClick={onDelete}/>
+            </div>
+          </div>
         </div>
       </div>
+      <Table
+       data={data} 
+       columns={columns} 
+       handleSelected={handleSelected}
+       handleSelectedAll={handleSelectedAll}
+       selected={selected}
+       handleEditClick={handleEditClick}
+      />
     </div>
+    {showAddModal && (
+      <AddStaffModal
+      setVisible={setShowAddModal}
+      setData={setData}
+    />
+    )}
+    {showEditModal && (
+      <EditStaffModal
+      setVisible={setShowEditModal}
+      form={editData}
+      setForm={setEditData}
+      setData={setData}
+     />
+    )}
+    </>
+
   );
   
 }

@@ -1,0 +1,91 @@
+body {
+    font-family: 'lato', sans-serif;
+}
+table {
+    width: 100%;
+    border-collapse:separate;
+    border: 1px solid #ededed;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+thead {
+    height: 40px;
+    background: #FAFBFE;
+    border-radius: 10px;
+    text-transform: uppercase;
+    color: #212B36;
+    font-size: 16px;
+}
+thead tr th:first-child {
+    /* border-top-left-radius: 10px; */
+    /* border-bottom-left-radius: 10px; */
+}
+tbody tr {
+    height: 60px;
+    border: 1px solid #ededed;
+    font-weight: 500;
+    color: #777;
+    transition: all 0.2s ease-in-out;
+}
+tbody tr:hover {
+    background-color: #ededed;
+}
+.row-content, .row-head {
+    width: 100%;
+    height: 100%;
+    padding-left: 10px;
+    max-width: 300px;
+    font-size: 14px;
+}
+.row-content p {
+    max-width: 300px;
+    margin: 0;
+}
+td .row-content {
+    display: flex;
+    align-items: center;
+    padding-right: 10px;
+    align-items: center;
+}
+td:last-child .row-content {
+    justify-content: space-between;
+}
+svg.edit-icon {
+    margin-left: 10px;
+    width: 30px;
+    transform: translateY(-2px);
+    height: 30px;
+    box-sizing: border-box;
+    border-radius: 50%;
+    display: inline-block;
+    padding: 5px;
+    cursor: pointer;
+}
+svg.edit-icon:hover {
+    background-color: #cccccca6;
+}
+table input {
+    cursor: pointer;
+}
+
+.receipt-detail-table tr th:last-child div {
+    margin: 0;
+}
+
+.receipt-detail-table tr th:last-child,
+.receipt-detail-table tr th:nth-last-child(2) {
+    text-align: center;
+}
+.receipt-detail-table tbody tr td:last-child .row-content,
+.receipt-detail-table tbody tr td:nth-last-child(2) .row-content{
+    text-align: center;
+    display: block;
+}
+td.delete-icon {
+    text-align: center;
+}
+td.delete-icon svg {
+    font-size: 20px;
+    color: #ff6f6f;
+    cursor: pointer;
+}

@@ -1,18 +1,22 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
-  BsCalendarDate,
-  BsFillHddNetworkFill,
   BsGraphDown,
   BsMenuButton,
   BsReceipt,
 } from "react-icons/bs";
 import { IoAccessibilityOutline, IoHomeOutline, IoMedalOutline, IoReceiptSharp, IoSettingsOutline } from "react-icons/io5";
-import { NavLink } from "react-router-dom";
-import styles from "./Sidebar.css";
+import { RiLogoutCircleRLine } from "react-icons/ri";
+import { Link, NavLink, useLocation } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+import "./Sidebar.css";
 
 function Sidebar({ children }) {
+  const {user, logOut} = useContext(AuthContext)
+
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
+  const location = useLocation();
+  const pathName = location.pathname
   const sidebarlist = [
     {
       name: "Trang chủ",
@@ -55,59 +59,37 @@ function Sidebar({ children }) {
       path: "/promotion",
       icon: <IoReceiptSharp className="sidebar-icon" />,
     },
-    // {
-    //   name: "Lịch",
-    //   path: "/calendar",
-    //   icon: <BsCalendarDate className="sidebar-icon" />,
-    // },
-    // {
-    //   name: "Thiết bị",
-    //   path: "/product",
-    //   icon: <IoSettingsOutline className="sidebar-icon" />,
-    // },
   ];
 
   return (
     // <aside className = {cx("wrapper")}>
     <div className="container-sidebar">
-      <div style={{ width: isOpen ? "200px" : "50px" }} className="sidebar">
-        {/* <ul className='sidebar-list'>
-                    {sidebarlist.map((item,index) => (
-                        <li className={`sidebar-item ${index === 1 ? 'active' : ''}`} key={index}>
-                            {item.icon} {item.name}
-                        </li>
-                    ))}
-                </ul> */}
+      <div  className="sidebar">
         <div className="top-section">
-          
-          <div style={{ marginLeft: isOpen ? "50px" : "0" }} className="bars">
-            <BsMenuButton onClick={toggle} />
+            <div style={{ marginLeft: isOpen ? "50px" : "0" }} className="bars">
+              <BsMenuButton onClick={toggle} />
+            </div>
+        </div>
+        <ul className='sidebar-list'>
+          {sidebarlist.map((item,index) => (
+              <li className={`sidebar-item ${pathName === item.path ? 'active' : ''}`} key={index}>
+                  <Link to={item.path}>{item.icon} {item.name}</Link>
+              </li>
+          ))}
+        </ul>
+
+      </div>
+      <main>
+        <div className="main-head">
+          <p className="welcome-dashboard">Xin chào! <span style={{textTransform: 'capitalize'}}>{user.HO} {user.TEN}</span></p>
+          <div className="logour-btn" onClick={logOut}>
+            Đăng xuất <RiLogoutCircleRLine />
           </div>
         </div>
-        {/* <ul className='sidebar-list'> */}
-        {sidebarlist.map((item, index) => (
-          <NavLink
-            to={item.path}
-            key={item.index}
-            // className={`sidebar-item ${index === item.path ? 'active' : ''}`} key={index}
-            className="link"
-            activeClassName="active"
-          >
-            {/* <li className={`sidebar-item ${index === 1 ? 'active' : ''}`} key={index}> */}
-            <div className="icon">{item.icon}</div>
-            <div
-              style={{ display: isOpen ? "block" : "none" }}
-              className="link-text"
-            >
-              {item.name}
-            </div>
-
-            {/* </li> */}
-          </NavLink>
-        ))}
-        {/* </ul > */}
-      </div>
-      <main>{children}</main>
+        <div className="main-container">
+          {children}
+        </div>
+      </main>
     </div>
     // </aside >
   );

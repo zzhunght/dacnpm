@@ -1,0 +1,27 @@
+.addBtn {
+    color: #fff;
+    background: #FF9F43;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 7px;
+    padding: 10px 10px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+.addBtn:hover {
+    background-color: #1B2850;;
+}
+.deleteBtn {
+    color: #fff;
+    background: #ff0000;
+    display: flex;
+    align-items: center;
+    border-radius: 7px;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+.disabled { 
+    cursor: no-drop;
+    opacity: 0.5;
+}

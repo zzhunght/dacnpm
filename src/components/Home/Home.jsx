@@ -1,123 +1,113 @@
-import { faCircleUser, faGear } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { Col, Row } from "antd";
+import { useEffect, useState } from "react";
+import { FiUser, FiUserCheck } from "react-icons/fi";
+import {BsFileText} from 'react-icons/bs'
 import "./Home.css";
-import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import images from "../../assets/image/";
-const rawData = [
+import { IoSettingsOutline } from "react-icons/io5";
+import axiosInstance from "../../utils/axiosConfig";
+import Table from "../Table/Table";
+
+const Customercolumns = [
   {
-    id: 1,
-    name: "Lược nhớt",
-    price: "10000",
-    inventory: "20",
-    type: "Phụ tùng",
+    Header: "ID",
+    accessor: "MAKH",
   },
   {
-    id: 2,
-    name: "Bugi",
-    price: "1000",
-    inventory: "500",
-    type: "Phụ tùng",
+    Header: "Tên",
+    accessor: "TEN",
   },
   {
-    id: 3,
-    name: "Dầu động cơ",
-    price: "500",
-    inventory: "500",
-    type: "LOẠI PHỤ PHẪM, DẦU MỠ",
+    Header: "Họ",
+    accessor: "HO",
+  }
+];
+
+const Accessorycolumns = [
+  {
+    Header: "Mã LKDV",
+    accessor: "MALKDV"
   },
   {
-    id: 4,
-    name: "Xăm, lốp",
-    price: "10",
-    inventory: "10",
-    type: "Phụ tùng",
+    Header: "Tên",
+    accessor: "TENLKDV",
   },
   {
-    id: 5,
-    name: "Xăm, lốp",
-    price: "10",
-    inventory: "10",
-    type: "Phụ tùng",
+    Header: "Giá",
+    accessor: "GIA",
   },
 ];
 function Home() {
   const [search, setSearch] = useState("");
+  const [customer,setCustomer] = useState([])
+  const [accessory,setAccessory] = useState([])
+
+  useEffect(()=>{
+    const getdata = async() =>{
+      const res = await axiosInstance.get('/accessory')
+      const res2 = await axiosInstance.get('/customer')
+      const data = res.data
+      const data2 = res2.data
+      setAccessory(data.items)
+      setCustomer(data2.items)
+    }
+    getdata()
+  },[])
 
   return (
     <div>
-      <div className="home-header">
-        <Container>
-          <Row>
-            <Col>
-              <div>
-                <input
-                  type="text"
-                  className="search search-home"
-                  placeholder="Tìm kiếm"
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </div>
-            </Col>
-            <Col xs={6}></Col>
-            <Col>
-              {" "}
-              <div className="account">
-                <FontAwesomeIcon icon={faCircleUser} />
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      </div>
-      <section className="product">
-        <div className="container">
-          <div className="row">
-            {rawData
-              .filter(
-                (row) =>
-                  row.name.toLowerCase().includes(search) ||
-                  row.type.toLowerCase().includes(search)
-              )
-              .map((data, index) => {
-                return (
-                  <div
-                    className="col-xl-3 col-lg-4 col-sm-12 accessory-item"
-                    key={index}
-                  >
-                    <Card
-                      className="card-home"
-                      style={{ background: "#41a1a4" }}
-                    >
-                      <div
-                        style={{ display: "flex", justifyContent: "center" }}
-                      >
-                        <Card.Img
-                          src={images.item}
-                          variant="top"
-                          style={{ width: "60px", height: "60px" }}
-                        ></Card.Img>
-                      </div>
-                      <Card.Body
-                        style={{ display: "flex", justifyContent: "center" }}
-                      >
-                        <Card.Text style={{ fontWeight: "1000" }}>
-                          {data.name}
-                        </Card.Text>
-                        <Card.Text style={{ paddingLeft: "12px" }}>
-                          {data.price + "VND"}
-                        </Card.Text>
-                      </Card.Body>
-                    </Card>
-                  </div>
-                );
-              })}
+      <Row gutter={[16]}>
+        <Col xl={6}>
+          <div className="widget">
+            <div className="widget-content">
+              <h4>100</h4>
+              <h5>Khách hàng</h5>
+            </div>
+            <div className="widget-img">
+              <FiUser className="widget-icon"/>
+            </div>
           </div>
-        </div>
-      </section>
+        </Col>
+        <Col xl={6}>
+          <div className="widget widget-2">
+            <div className="widget-content">
+              <h4>13</h4>
+              <h5>Nhân viên</h5>
+            </div>
+            <div className="widget-img">
+              <FiUserCheck className="widget-icon"/>
+            </div>
+          </div>
+        </Col>
+        <Col xl={6}>
+          <div className="widget widget-3">
+            <div className="widget-content">
+              <h4>134</h4>
+              <h5>Linh kiện và dịch vụ</h5>
+            </div>
+            <div className="widget-img">
+              <IoSettingsOutline className="widget-icon"/>
+            </div>
+          </div>
+        </Col>
+        <Col xl={6}>
+          <div className="widget widget-4">
+            <div className="widget-content">
+              <h4>2312</h4>
+              <h5>Phiếu bảo hành</h5>
+            </div>
+            <div className="widget-img">
+              <BsFileText className="widget-icon"/>
+            </div>
+          </div>
+        </Col>
+      </Row>
+
+      <Row gutter={[16]}>
+        <Col xl={12}>
+        </Col>
+        <Col xl={12}>
+        </Col>
+      </Row>
     </div>
   );
 }

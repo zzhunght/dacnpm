@@ -1,252 +1,137 @@
-import {
-  faCircleXmark,
-  faFloppyDisk,
-  faMagnifyingGlass,
-  faPenToSquare,
-  faSpinner,
-  faTrashCan,
-  faEye,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
-import { Form, Spinner } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import Table from "../../Table/Table";
 import "./Accessory.css";
+import SearchBar from '../../search/SearchBar'
+import Add from "../../Button/Add";
+import AddProductModal from "../../Modal/AddProduct";
+import EditProductModal from "../../Modal/EditProduct";
+import axiosInstance from "../../../utils/axiosConfig";
+import Delete from "../../Button/Delete";
+import { AuthContext } from "../../../context/AuthContext";
 
-const rawData = [
+const columns = [
   {
-        id: 1,
-        name: "Lược nhớt",
-        price: "10000",
-        inventory: "20",
-        type: "Phụ tùng",
-      },
-      {
-        id: 2,
-        name: "Bugi",
-        price: "1000",
-        inventory: "500",
-        type: "Phụ tùng",
-      },
-      {
-        id: 3,
-        name: "Dầu động cơ",
-        price: "500",
-        inventory: "500",
-        type: "LOẠI PHỤ PHẪM, DẦU MỠ",
-      },
-      {
-        id: 4,
-        name: "Săm, lốp",
-        price: "10",
-        inventory: "10",
-        type: "Phụ tùng",
-      },
-      {
-        id: 5,
-        name: "Gioăng đệm",
-        price: "950",
-        inventory: "60",
-        type: "Phụ tùng",
-      },
+    Header: "Mã LKDV",
+    accessor: "MALKDV"
+  },
+  {
+    Header: "Tên",
+    accessor: "TENLKDV",
+  },
+  {
+    Header: "Loại",
+    accessor: "LOAI",
+    Cell: (props) => <span className="number">{props.value}</span>,
+  },
+  {
+    Header: "Số lượng tồn",
+    accessor: "SOLUONGTON",
+  },
+  {
+    Header: "Giá",
+    accessor: data => data?.CHITIETLKDV[0].GIA,
+  },
 ];
+
 function Accessory() {
-  const [tableData, setTableData] = useState(rawData);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [updateSate, setUpdateState] = useState(-1);
+  const [selected,setSelected] = useState([])
+  const [showAddModal,setShowAddModal] = useState(false)
+  const [showEditModal,setShowEditModal] = useState(false)
+  const [editData, setEditData] = useState({})
+  const [data, setData] = useState([])
+  const {messageApi} = useContext(AuthContext)
+
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 500);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
+    const getdata = async() =>{
+      const res = await axiosInstance.get('/accessory')
+      const data = res.data
+      console.log(data)
+      setData(data.items)
+    }
+    getdata()
+  },[])
+
+  const handleSelectedAll = (e) => {
+    if(e.target.checked) {
+      setSelected(data?.map(i => i.MALKDV))
+    } else {
+      setSelected([])
+    }
+
+  }
+
+  const handleSelected = (e, id) => {
+    if (e.target.checked ) {
+      setSelected(x => [...x, id])
+    } else {
+      const newSelelected = selected.filter(i => i !== id)
+      setSelected(newSelelected)
+    }
+  }
+
+  const handleEditClick = (data) => {
+    console.log(data) 
+    setEditData({
+      ...data,
+      GIA : parseInt(data.Giá)
+    })
+    setShowEditModal(true)
+  }
+  const onDelete = async () => {
+
+    const res = await axiosInstance.delete('/accessory/delete-items?Ids=' + selected.join(','))
+    if(res.data.success) {
+      messageApi.open({
+        type: 'success',
+        content: 'Thao tác thành công !',
+      });
+      const newData = data?.filter(i => !selected.includes(i.MALKDV))
+      setData(newData)
+      setSelected([])
+    }
+  }
+
   return (
+    <>
     <div>
-      <div className="search-header">
         <div className="header-receipt-container">
-          <h4 className="header-receipt-name">LINH KIỆN VÀ DỊCH VỤ</h4>
-          <Link className="add-receipt" to="/addAccessory">Thêm linh kiện và dịch vụ</Link>
+          <h4 className="title-medium">LINH KIỆN VÀ DỊCH VỤ</h4>
+          <div className="flex mb-16 al-ct spc-bw">
+            <SearchBar/>
+            <div className="flex">
+              <Add title='Thêm sản phẩm mới' onClick={()=>setShowAddModal(true)}/>
+              <Delete disabled={selected.length === 0 ? true : false} onClick={onDelete}/>
+            </div>
+          </div>
         </div>
 
-        <input
-          type="text"
-          className="search"
-          placeholder="Tìm kiếm linh kiện và dịch vụ"
-          onChange={(e) => setSearch(e.target.value)}
-        />
-
-        <div>
-          <Form onSubmit={handleSubmit}>
-            <table>
-              <thead>
-                <tr>
-                  <th>Tên</th>
-                  <th>Giá</th>
-                  <th>Số lượng tồn</th>
-                  <th>Loại</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {!loading &&
-                  tableData
-                    .filter((row) =>
-                      row.name.toLowerCase().includes(search)
-                      || row.type.toLowerCase().includes(search)
-                    )
-                    .map((row, index) =>
-                      updateSate === row.id ? (
-                        <EditCarReceipt
-                          row={row}
-                          tableData={tableData}
-                          setTableData={setTableData}
-                        />
-                      ) : (
-                        <tr key={row.id}>
-                          <td>{row.name}</td>
-                          <td>{row.price}</td>
-                          <td>{row.inventory}</td>
-                          <td>{row.type}</td>
-                          
-                          <td className="btn-replace">
-                            {/* <Link to="/deatilCarReceipt">
-                              <FontAwesomeIcon className="view-btn" icon={faEye}/>
-                            </Link> */}
-                            <button
-                              className="edit-btn"
-                              onClick={() => handleEdit(row.id)}
-                              
-                            >
-                              <FontAwesomeIcon icon={faPenToSquare} />
-                            </button>
-                            <button className="delete-btn" onClick={() => handleDelete(row.id)}>
-                              <FontAwesomeIcon icon={faTrashCan} />
-                            </button>
-                          </td>
-                        </tr>
-                      )
-                    )}
-              </tbody>
-            </table>
-          </Form>
-        </div>
-      </div>
+      <Table
+       data={data} 
+       columns={columns} 
+       handleSelected={handleSelected}
+       handleSelectedAll={handleSelectedAll}
+       selected={selected}
+       handleEditClick={handleEditClick}
+      />
     </div>
+    {showAddModal && (
+      <AddProductModal
+      setVisible={setShowAddModal}
+      setData={setData}
+     />
+    )}
+    {showEditModal && (
+      <EditProductModal
+      setVisible={setShowEditModal}
+      form={editData}
+      setForm={setEditData}
+      setData={setData}
+     />
+
+    )}
+    </>
   );
-  function handleEdit(id) {
-    setUpdateState(id);
-  }
-  function handleDelete(id) {
-    const newlist = tableData.filter((li) => li.id !== id)
-    setTableData(newlist)
 }
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    const name = e.target.elements.name.value;
-    const price = e.target.elements.price.value;
-    const inventory = e.target.elements.inventory.value;
-    const type = e.target.elements.type.value;
-   
-    const newList = tableData.map((li) =>
-      li.id === updateSate
-        ? {
-            ...li,
-            name: name,
-            price: price,
-            inventory: inventory,
-            type:type,
-           
-          }
-        : li
-    );
-    setTableData(newList);
-    setUpdateState(-1);
-  }
-}
-
-function EditCarReceipt({ row, tableData, setTableData }) {
-  function handleInputname(e) {
-    const value = e.target.value;
-    const newList = tableData.map((li) =>
-      li.id === row.id ? { ...li, name: value } : li
-    );
-    setTableData(newList);
-  }
-  function handleInputprice(e) {
-    const value = e.target.value;
-    const newList = tableData.map((li) =>
-      li.id === row.id ? { ...li, price: value } : li
-    );
-    setTableData(newList);
-  }
-
-  function handleInputinventory(e) {
-    const value = e.target.value;
-    const newList = tableData.map((li) =>
-      li.id === row.id ? { ...li, inventory: value } : li
-    );
-    setTableData(newList);
-  }
-  function handleInputtype(e) {
-    const value = e.target.value;
-    const newList = tableData.map((li) =>
-      li.id === row.id ? { ...li, type: value } : li
-    );
-    setTableData(newList);
-  }
-  
-return ( 
-    <tr>
-    <td>
-      <input
-        style={{ zIndex: 1 }}
-        type="text"
-        onChange={handleInputname}
-        name="name"
-        value={row.name}
-      />
-    </td>
-    <td>
-      {" "}
-      <input
-        type="text"
-        name="price"
-        onChange={handleInputprice}
-        value={row.price}
-      />
-    </td>
-    <td>
-      {" "}
-      <input
-        type="text"
-        name="inventory"
-        onChange={handleInputinventory}
-        value={row.inventory}
-      />
-    </td>
-    <td>
-      {" "}
-      <input
-        type="text"
-        name="type"
-        onChange={handleInputtype}
-        value={row.type}
-      />
-    </td>
-    
-  
-    <td className="btn-replace">
-      <button className="btn-update">
-        <FontAwesomeIcon icon={faFloppyDisk} />
-      </button>
-    </td>
-  </tr>
-);
-
-}
-
-export default Accessory
+export default Accessory;

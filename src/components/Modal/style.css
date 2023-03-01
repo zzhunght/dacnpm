@@ -1,0 +1,92 @@
+.modal-v1 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+}
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #00000054;
+}
+.modal-title {
+    padding-bottom: 5px;
+    color: #666;
+}
+.modal-form {
+    background: #fff;
+    width: 60vw;
+    margin: 0 auto;
+    padding: 20px 30px;
+    border-radius: 5px;
+    animation: fade-down 0.5s ease-out;
+    position: relative;
+}
+@keyframes fade-down { 
+    from {
+		opacity: 0;
+		transform: translate3d(0, -20%, 0);
+	}
+	to {
+		opacity: 1;
+		transform: translate3d(0, 0, 0);
+	}
+}
+
+select.form-select {
+    height: 40px;
+    font-size: 14px;
+}
+.form {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    padding: 20px 0;
+}
+.modal-btn {
+    margin-top: 20px;
+    text-align: end;
+}
+.modal-btn-cancle, .modal-btn-save {
+    width: 90px;
+    height: 40px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 6px;
+    color: #fff;
+    font-weight: 500;
+}
+button.modal-btn-save {
+    margin-left: 10px;
+    background: #10d0f7;
+}
+.modal-btn-cancle{
+    background-color: #fff;
+    color: #000;
+}
+.modal-btn-cancle:hover {
+    background-color: #f5f5f5;
+}
+textarea.form-textarea {
+    display: block;
+    width: 100%;
+    border: 1px solid #ccc;
+    height: 100px;
+    border-radius: 5px;
+    resize: none;
+    padding: 5px;
+    outline: none;
+    margin-bottom: 20px;
+}
+input[type="date"]::-webkit-calendar-picker-indicator{
+    margin-right: 10px;
+}
+.toast-container.position-absolute.top-0.end-0 {
+    z-index: 1000;
+}

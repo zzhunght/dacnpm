@@ -1,9 +1,14 @@
 :root{
     --purple : #a922a9;
+    --text-secondary:#637381;
+    --text-black: #000;
+    --white: #fff;
+    --bg-1:#1B2850;
 }
 
 .flex {
     display: flex;
+    gap: 16px
 }
 .flex-column {
     display: flex;
@@ -18,7 +23,7 @@
 .jt-ct {
     justify-content: center;
 }
-.al-cl {
+.al-ct {
     align-items: center;
 }
 .container {
@@ -31,3 +36,116 @@
 .bold {
     font-weight: 500;
 }
+
+.title-medium {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.size-11 {
+    font-size: 11px;
+}
+.size-14 {
+    font-size: 14px;
+}
+.size-16{
+    font-size: 16px;
+}
+.size-18 {
+    font-size: 18px;
+}
+.size-20 {
+    font-size: 20px;
+}
+.size-24 {
+    font-size: 24px;
+}
+.size-28 {
+    font-size: 28px;
+}
+.size-36 {
+    font-size: 36px;
+}
+.text {
+    color: #000;
+}
+.text-secondary {
+    color: var(--text-secondary);
+}
+.text-light {
+    color: var(--white);
+}
+/* margin */
+
+.mt-6 {
+    margin-top: 6px ;
+}
+.mt-12 {
+    margin-top: 12px ;
+}
+.mt-16 {
+    margin-top: 16px ;
+}
+.mt-24 {
+    margin-top: 24px ;
+}
+.mt-28 {
+    margin-top: 28px ;
+}
+.mt-36 {
+    margin-top: 36px ;
+}
+.mt-48 {
+    margin-top: 48px ;
+}
+
+/* margin bottom */
+.mb-6 {
+    margin-bottom: 6px ;
+}
+.mb-12 {
+    margin-bottom: 12px ;
+}
+.mb-16 {
+    margin-bottom: 16px ;
+}
+.mb-24 {
+    margin-bottom: 24px ;
+}
+.mb-28 {
+    margin-bottom: 28px ;
+}
+.mb-36 {
+    margin-bottom: 36px ;
+}
+.mb-48 {
+    margin-bottom: 48px ;
+}
+
+/* margin right */
+.mr-6 {
+    margin-right: 6px ;
+}
+.mr-12 {
+    margin-right: 12px ;
+}
+.mr-16 {
+    margin-right: 16px ;
+}
+.mr-24 {
+    margin-right: 24px ;
+}
+.mr-28 {
+    margin-right: 28px ;
+}
+.mr-36 {
+    margin-right: 36px ;
+}
+.mr-48 {
+    margin-right: 48px ;
+}
+input[type="checkbox"] {
+    margin-right: 10px;
+    transform: translateY(1px);
+}
+
